@@ -1,0 +1,31 @@
+---
+- hosts: 10.110.100.96
+  gather_facts: false
+  tasks:
+    - name: Verify WSM User
+      shell: "ps -ef | grep wsm | out -d ' ' -f 1 | grep -v hfadmin"
+      register: wsm_user
+      ignore_errors: yes
+      
+    - name: Print wsm_user
+      debug:
+        msg: WSM is Running by users {{ wsm_user.stdout_lines }}
+      ignore_errors: yes
+      
+    - name: Delete Files to wsm Directory
+      file:
+        state: absent
+        path: /appsw/swdpt/{{ wsm_user.stdout_lines[1] }}/webtob5/ssl/hello.txt
+      become: yes
+      
+    - name: Delete Files to wsm Directory
+      file:
+        state: absent
+        path: /appsw/swdpt/{{ wsm_user.stdout_lines[2] }}/webtob5/ssl/hello.txt
+      become: yes
+      
+    - name: Delete Files to wsm Directory
+      file:
+        state: absent
+        path: /appsw/swdpt/{{ wsm_user.stdout_lines[3] }}/webtob5/ssl/hello.txt
+      become: yes
