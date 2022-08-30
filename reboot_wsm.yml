@@ -99,4 +99,36 @@
          mode: 0511
        become: yes
        ignore_errors: yes
+       
+       
+       
+       
+       
+       - name: Reboot WSM for {{ wsm_user.stdout_lines[0] }}
+         shell: sh wsreboot.sh
+         args:
+           chdir: /appsw/swdpt/{{ wsm_user.stdout_lines[0] }}/webtob5/bin
+         become: yes
+         ignore_errors: yes
+         
+         
+        - name: Reboot WSM for {{ wsm_user.stdout_lines[1] }}
+         shell: sh wsreboot.sh
+         args:
+           chdir: /appsw/swdpt/{{ wsm_user.stdout_lines[1] }}/webtob5/bin
+         become: yes
+         ignore_errors: yes
         
+       - name: Reboot WSM for {{ wsm_user.stdout_lines[2] }}
+         shell: sh wsreboot.sh
+         args:
+           chdir: /appsw/swdpt/{{ wsm_user.stdout_lines[2] }}/webtob5/bin
+         become: yes
+         ignore_errors: yes
+         
+        - name: Reboot WSM for {{ wsm_user.stdout_lines[3] }}
+         shell: sh wsreboot.sh
+         args:
+           chdir: /appsw/swdpt/{{ wsm_user.stdout_lines[3] }}/webtob5/bin
+         become: yes
+         ignore_errors: yes
