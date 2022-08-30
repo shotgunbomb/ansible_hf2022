@@ -1,0 +1,89 @@
+---
+- hosts: 10.110.100.96
+  gather_facts: false
+  vars:
+    file_path_to_send: /etc/ansible/resources/hello.txt
+    target_dir: /appsw/swdpt/
+  tasks:
+  
+    - name: Verify that User Started wbtb exists
+      shell: cat /etc/passwd | grep wbtb | wc -l
+      register: wbtb_user_count
+      
+      
+    - name: Stop Playbook If WebToB User doesn't Exists
+      meta: end_host
+      when: wbtb_user_count.stdout | int < 1
+      
+      
+    - name: Verify WSM User
+      shell: "ps -ef | grep wsm | cut -d ' ' -f 1 | grep -v hfadmin"
+      register: wsm_user
+     
+     
+    - name: Count for WSM Running user
+      shell: ps -ef | grep wsm | grep -v root | wc -l
+      register: count_wsm_running
+   
+   
+    - name: Print How Many WSM Process Running Actually
+      debug:
+        msg: "{{ count_wsm_running.stdout | int - 1 }}"
+  
+  
+    - name: End Playbook if There is no wsm process
+      meta: end_host
+      when: count_wsm_running.stdout | int < 2
+  
+  
+    - name: Print wsm_user
+      debug:
+        msg: WSM is Running by User {{ wsm_user.stdout_lines }}
+
+
+    - name: Copy Files to wsm Directory
+      copy:
+        src: "{{ item }}"
+        dest: /appsw/swdpt/{{ wsm_user.stdout_lines[0] }} webtob5/ssl/
+        owner: "{{ wsm_user.stdout_lines[0] }}"
+        group: app
+      with_fileglob:
+        - "{{ dir_files_to_copy }}"
+      become: yes
+      ignore_errors: yes
+      
+      
+    - name: Copy Files to wsm Directory
+      copy:
+        src: "{{ item }}"
+        dest: /appsw/swdpt/{{ wsm_user.stdout_lines[1] }} webtob5/ssl/
+        owner: "{{ wsm_user.stdout_lines[1] }}"
+        group: app
+      with_fileglob:
+        - "{{ dir_files_to_copy }}"
+      become: yes
+      ignore_errors: yes
+      
+      
+    - name: Copy Files to wsm Directory
+      copy:
+        src: "{{ item }}"
+        dest: /appsw/swdpt/{{ wsm_user.stdout_lines[2] }} webtob5/ssl/
+        owner: "{{ wsm_user.stdout_lines[2] }}"
+        group: app
+      with_fileglob:
+        - "{{ dir_files_to_copy }}"
+      become: yes
+      ignore_errors: yes
+      
+      
+    - name: Copy Files to wsm Directory
+      copy:
+        src: "{{ item }}"
+        dest: /appsw/swdpt/{{ wsm_user.stdout_lines[3] }} webtob5/ssl/
+        owner: "{{ wsm_user.stdout_lines[3] }}"
+        group: app
+      with_fileglob:
+        - "{{ dir_files_to_copy }}"
+      become: yes
+      ignore_errors: yes
